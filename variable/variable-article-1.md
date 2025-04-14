@@ -14,11 +14,15 @@ knows very well what input data type it expects and what the output type will be
 
 Now, imagine my surprise when I saw this code ():
 ```java
+public boolean 
 var fileLocation = getFileLocation();
 val fileUploaded = checkFileUploaded(fileLocation);
 ```
-My first reaction was "No, Java was hacked by a JavaScript ninja (or NinjaScript)!!!"
+My first reaction was "No, Java was hacked by a JavaScript ninja (or NinjaScript)!!!". 
 
+Yet, this is a valid and running Java code, and according to some, easier to read, but more on this later.
+
+For now, let's analyze what we see here. First, we
 
 
 #-------------------------------------
