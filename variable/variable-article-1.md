@@ -1,5 +1,29 @@
 ### On variables and their many names in Java and programming at large
 
+I was in my first week of an internship. I opened a few files from the Spring Boot app
+I was about to make changes to and was petrified. I was expecting to see Java code - 
+simple, strongly typed, javadoc enhanced commented Java code. What I was facing was more of
+those lines of cryptic code we saw Neo reading in Matrix, with the only difference that
+the lines where still horizontal. "That's already good", I thought, "...horizontal lines means 
+it's not entirely alien. I can read that, assuming it's still written from left to right..." 
+
+There is a reason that over the last few decades, generations of programmers have been introduced
+to coding through Java. Java has Classes, Classes has data and behaviour. Each data type 
+is clearly defined, using strict keywords and order. The class' behaviour, aka method, 
+knows very well what input data type it expects and what the output type will be.
+
+Now, imagine my surprise when I saw this code ():
+```java
+var fileLocation = getFileLocation();
+val fileUploaded = checkFileUploaded(fileLocation);
+```
+My first reaction was "No, Java was hacked by a JavaScript ninja (or NinjaScript)!!!"
+
+
+
+#-------------------------------------
+
+
 When you are just getting started as a programmer, there are many things you encounter 
 that don't make total sense, initially. You hear your teammates using the words variable 
 and value interchangeably. You see same variable being declaring in different places, and 
