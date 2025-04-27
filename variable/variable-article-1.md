@@ -1,170 +1,159 @@
-### On variables and their many names in Java and programming at large
 
-I was in my first week of an internship. I opened a few files from the Spring Boot app
-I was about to make changes to and was petrified. I was expecting to see Java code - 
-simple, strongly typed, javadoc enhanced commented Java code. What I was facing was more of
-those lines of cryptic code we saw Neo reading in Matrix, with the only difference that
-the lines where still horizontal. "That's already good", I thought, "...horizontal lines means 
-it's not entirely alien. I can read that, assuming it's still written from left to right..." 
+### Ante-Thoughts
 
-There is a reason that over the last few decades, generations of programmers have been introduced
-to coding through Java. Java has Classes, Classes has data and behaviour. Each data type 
-is clearly defined, using strict keywords and order. The class' behaviour, aka method, 
-knows very well what input data type it expects and what the output type will be.
+The morning commute in the big cities starts early, around 6 a.m., and follows the usual path: bus, metro, maybe another bus. It's a routine 
+that tens or hundreds of thousands take part in every day, or almost. During those morning hours, we ride in all stages of alertness—from
+caffeine-fueled energy to heavy-lidded drowsiness. You might see it if you looked up. But few do.
 
-Now, imagine my surprise when I saw this code ():
+Instead, all the attention is directed towards something more important, or that’s what every one of them thinks they do. They all look into their smartphones, 
+swiping from one video to the next every few seconds. That’s the reality they have chosen.
+
+Yet just outside their screens, a harsher reality unfolds. Homelessness is no longer rare. It has no single face. It touches all walks of life. And as long as 
+we, the commuters, stay absorbed in digital worlds, the struggles right outside bus window, or in front of the metro entrance, stay invisible - 
+easier to ignore than to face.
+
+### Introduction
+
+# Introduction
+
+Back when I was fresh out of an internship, I decided to build a small Java project. Good practices, I thought. Lots of Googling, lots of Stack Overflow.
+
+I found a promising Spring Boot app on GitHub. Eagerly, I opened it—only to feel like Neo staring at the Matrix.
+
+"Well," I laughed, "at least the lines go sideways. That's something!"
+
+Java's always been about order: Classes, strict types, methods that know what they want. But here was code that looked like this:
+
 ```java
-public boolean 
-var fileLocation = getFileLocation();
-val fileUploaded = checkFileUploaded(fileLocation);
+public boolean verifyComplete() {
+    var fileLocation = getFileLocation();
+    val fileUploaded = checkFileUploaded(fileLocation);
+}
 ```
-My first reaction was "No, Java was hacked by a JavaScript ninja (or NinjaScript)!!!". 
+That var and val magic? It's real—and it’s changing how we code. Let’s dig into where they came from and what they mean for Java's future.
 
-Yet, this is a valid and running Java code, and according to some, easier to read, but more on this later.
+# The Story of `var` and `val`
 
-For now, let's analyze what we see here. First, we
+## Timeline of `var`
 
+The `var` keyword showed up fairly recently. It made its first appearance in Java SE 10 back in March 2018.
 
-#-------------------------------------
+`var` lets you skip explicitly stating the type when declaring local variables. Instead, Java figures out the type for you. 
+According to the official documentation, it was supposed to make your code more readable and cut down on boilerplate.
 
+And sure, readability got a boost. But about that boilerplate? Not so much.
 
-When you are just getting started as a programmer, there are many things you encounter 
-that don't make total sense, initially. You hear your teammates using the words variable 
-and value interchangeably. You see same variable being declaring in different places, and 
-then you need to call it local, or static, or that thingy that stores that thing... Uhhh...
-
-On top of that, we now have lombok, which allows us to simplify our code even more, and 
-reduce the definition of our variable to var, or val, or... wait, which one is which, again?
-
-Oh, right. Not to forget that if we work in Spring Framework, our Java code becomes really 
-not that Java-ish. We have annotations! Here is one of them - @Value
-
-As we can see, there are many ways we can define, instantiate, and get hold of values in our 
-Java / Spring Boot application.
-
-Today we'll sort out what are the `val` and `var` identifiers or types (we'll find out
-which one is which, as well), and will walk through an exhaustive and complete set of examples.
-Finally, we'll consider some common pitfalls we may encounter, when using one or the other.
-
-### The timeline of `var` and `val`
-
-The var identifier comes from Java, and according to the official documentation it was introduced 
-in Java 10, which happened to be March 2018. The var identifier allows for type inference when 
-declaring local variables. In the official documentation it is stated that this inference type 
-was meant to make your Java code morea readable and reduce the amount of the required boilerplate code.
-While I do agree that the former was achieved, the latter is not really.
-
-Consider for yourself, based on the example from the same official release notes, we have two cases.
-First one shows the code snippet with classic Java code, which consists of 3 lines of code:
+Here’s a classic Java snippet from the release notes:
 
 ```java
-URL url = new URL("http://www.oracle.com/"); 
-URLConnection conn = url.openConnection(); 
+URL url = new URL("http://www.oracle.com/");
+URLConnection conn = url.openConnection();
 Reader reader = new BufferedReader(
-    new InputStreamReader(conn.getInputStream()));
+   new InputStreamReader(conn.getInputStream()));
 ```
-Now, let's see what `var` does to the code, when replacing the types:
+
+Now, here's the same example using var:
+
 ```java
-var url = new URL("http://www.oracle.com/"); 
-var conn = url.openConnection(); 
+var url = new URL("http://www.oracle.com/");
+var conn = url.openConnection();
 var reader = new BufferedReader(
-    new InputStreamReader(conn.getInputStream()));
+   new InputStreamReader(conn.getInputStream()));
 ```
+The number of lines? Still three. The logic? Still there. The only difference is that Java saves you from typing the types.
 
-It definitely made it more readable, but did it reduce the boilerplate code? Hardly so, since we still 
-have 3 lines of code, and we still have the same statements in each line. The only difference is that the
-variable type is missing on the declaration side.
+So, yes, it’s cleaner. But “less boilerplate”? That's debatable.
 
-Ok, let's proceed further. The lombok's `val` type was first released in lombok version 0.10 (according to 
-maven repository, the release dates from October 03rd, 2011). It was further enhanced with the final 
-keyword much later, in lombok version 1.18.22, which is dated from October 7th, 2021. This represents a
-full 10 years period, almost day by day.
 
-This feature is advertised in lombok, as hassle-free final local variables. Fair enough, it's indeed 
-hassle-free, when you consider that instead of `final int` we'll need to go only with `val`. Nevertheless, 
-using `val` is not entirely hassle-free, is it?
+## Timeline of val
+The story of Lombok’s val is a bit older—and more interesting.
 
-Consider the following situation. You start working with some legacy code, and you go into one method
-and see some `var` instantiated variables. They are local variables so we may try to update it somewhere below.
-We'll do the same with a `val` variable defined in the same method, as a local variable. 
+val was introduced in Lombok version 0.10 (around October 3, 2011). It went even further than var: not only did it infer types, 
+but it also made the variables immutable. Once you assign a value to a val variable, you can't reassign it later.
 
-Now, here is the question - which one will fail to be updated? Also, will it fail at compile or runtime?
+Fast forward ten years, and val got even stricter with enhancements like adding the final keyword automatically (in Lombok v1.18.22, released on October 7, 2021).
 
-It may be confusing, but I'll offer here an exmplae that will stick to your memory forever. And I'll do that 
-by using an example that will bring us out of our IT bubble, in which we spend most of our lives.
+Ten years almost to the day. Now that's patience.
 
-We'll use as an example, some concepts from `Poverty`. Yes, a real, socially debilitating phenomenon, and 
-not a witty Java API with a weird name. So, let's proceed.
 
-What comes to your mind when you hear the word poverty? I won't ask you `when you see poverty` because this
-is not something everyone sees it. Most of us are so isolated socially, and so wrapped up into our own 
-social media apps' feeds, that the only place we may see `poverty` may happen on a random YouTube reel or
-in a last-fad mini series we binge until past midnight. I really mean the real poverty from the actual real life.
 
-So, I'll repeat my question - what comes to mind when you hear the word `poverty`?
+A Real-Life Analogy: Poverty, var, and val
+Let’s shift gears a bit.
 
-Here's what comes to my mind when I hear this word - `lack of safety`, `bad housing or lack thereof`, 
-`lack of legal or even basic security`. These are some pretty nasty combinations of words that most of you 
-have not heard of, or maybe sporadically read about in a dictionary, but according to Stats Canada, in 2022
-the poverty rate was 9.9%; not sure why it is called rate, because according to those same documents, the 
-same percentage needs to be interpreted as the actual percentage of the population. In 2022 Canada's population 
-was 39,566,248 ppl, thus 9.9% is roughly 3,917,059 ppl. This represents entire city of Montreal, or roughly
-Vancouver and Calgary put together (of course this'll never happen, but just imagine).
+Sometimes, to truly understand a concept, you need a vivid example—something outside the cozy bubble of programming.
 
-Now, what does poverty has with all these not-so-sexy numbers from Stats Canada?
+Let’s talk about poverty.
 
-You see, when we want to memorize a concept nad we want that memory to stay with us for long, the best 
-way to achieve this is to use some vivid examples. Of course, we could pick many vivid examples around us,
-but those will not be that useful. You may ask how these are any useful to us, those who can afford 
-to read from and write unto a PC? It's a good questions.
+What comes to mind when you hear that word? Maybe lack of safety, poor housing, or no legal protection. These are not just abstract ideas—they're the harsh realities for millions.
 
-My answer is the following - many problems in our society are not solved, or are persistently ignored
-because the main streams of information are ignoring them. 
+In 2022, Canada's poverty rate was 9.9%, according to Stats Canada. That’s nearly four million people—about the size of Montreal or the combined population of Vancouver and Calgary.
 
-By reading this article, you may learn something about Java and lombok features, but you'll also learn 
-something that is part of our real life, as well. Next time you take a walk in a less favorable area of
-your city, your mind will, hopefully, not wander about the latest TikTok video on how to spell banana 
-backward, but it'll spot some faces, out of the stats I just gave you above.
+And yet, most of us only catch glimpses of poverty through a social media reel or a YouTube documentary. It's distant, sanitized.
+
+But real poverty? It’s messy. It’s raw. And it’s everywhere if you know where to look.
+
+
+Bringing It Together: A Code Example
+Let's connect this idea back to var and val.
+
+In Java, var represents changing conditions—just like someone's safety level can fluctuate based on their environment.
+
+Meanwhile, val represents fixed conditions—things that don't (or can’t) easily change, like a chronic lack of legal protection.
+
+Here's a simple Java program to illustrate:
 
 ```java
 import lombok.val;
 
-public class PovertyViolenceAnalogy {
-    public static void main(String[] args) {
-        // 'var' represents fluctuating circumstances, including exposure to violence
-        var safetyLevel = "vulnerable";
-        System.out.println("Initial safety level: " + safetyLevel);
+public class PovertyAnalogy {
+   public static void main(String[] args) {
+       // 'var' represents fluctuating circumstances, including exposure to violence
+       var safetyLevel = "vulnerable";
+       System.out.println("Initial safety level: " + safetyLevel);
+       
+       safetyLevel = "witnessing domestic violence"; // A negative change in environment
+       System.out.println("Exposure to violence at home: " + safetyLevel);
 
-        safetyLevel = "witnessing domestic violence"; // A negative change in environment
-        System.out.println("Exposure to violence at home: " + safetyLevel);
 
-        safetyLevel = "living in a high-crime area"; // Another shift in risk
-        System.out.println("Environment with high crime rates: " + safetyLevel);
+       safetyLevel = "living in a high-crime area"; // Another shift in risk
+       System.out.println("Environment with high crime rates: " + safetyLevel);
 
-        safetyLevel = "victim of assault"; // A direct experience of violence
-        System.out.println("Experienced direct violence: " + safetyLevel);
 
-        var housingSecurity = "precarious";
-        System.out.println("Initial housing security: " + housingSecurity);
+       safetyLevel = "victim of assault"; // A direct experience of violence
+       System.out.println("Experienced direct violence: " + safetyLevel);
 
-        housingSecurity = "evicted and unsafe"; // Housing loss leading to increased vulnerability
-        System.out.println("Homeless and facing increased danger: " + housingSecurity);
 
-        // 'val' represents fixed states of deprivation that can increase vulnerability to violence
-        val lackOfBasicSecurity = true; // Persistent lack of safety nets
-        System.out.println("Consistent lack of basic security: " + lackOfBasicSecurity);
+       var housingSecurity = "precarious";
+       System.out.println("Initial housing security: " + housingSecurity);
 
-        val limitedLegalRecourse = true; // A fixed barrier to seeking protection
-        System.out.println("Restricted access to legal help: " + limitedLegalRecourse);
-        
-        // Illustrating how a fixed state ('val') can make a fluctuating state ('var') worse
-        if (lackOfBasicSecurity) {
-            safetyLevel = "extremely vulnerable"; // Lack of security amplifies the risk
-            System.out.println("Lack of security exacerbates vulnerability: " + safetyLevel);
-        }
-    }
+
+       housingSecurity = "evicted and unsafe"; // Housing loss leading to increased vulnerability
+       System.out.println("Homeless and facing increased danger: " + housingSecurity);
+
+
+       // 'val' represents fixed states of deprivation that can increase vulnerability to violence
+       val lackOfBasicSecurity = true; // Persistent lack of safety nets
+       System.out.println("Consistent lack of basic security: " + lackOfBasicSecurity);
+
+
+       val limitedLegalRecourse = true; // A fixed barrier to seeking protection
+       System.out.println("Restricted access to legal help: " + limitedLegalRecourse);
+      
+       // Illustrating how a fixed state ('val') can make a fluctuating state ('var') worse
+       if (lackOfBasicSecurity) {
+           safetyLevel = "extremely vulnerable"; // Lack of security amplifies the risk
+           System.out.println("Lack of security exacerbates vulnerability: " + safetyLevel);
+       }
+   }
 }
 ```
+Here, var allows changes, just like life circumstances can change. But val locks in a disadvantage—making already tough situations even tougher.
+
+## Final Thoughts
+By blending real-world analogies with Java code, we can not only understand programming better but also stay connected to the world around us.
+
+Next time you see a var or val in code, maybe you’ll think a little differently—not just about types, but about change, about immutability, 
+and about the invisible struggles many face every day.
 
 
 ### References
